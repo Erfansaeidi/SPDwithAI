@@ -1,18 +1,20 @@
-from utils import preprocess_data, evaluate_model
+import pandas as pd
 from joblib import load
+from utils import preprocess_data, evaluate_model
 
-# Load the new dataset
-X_new, y_new = preprocess_data('db/cm1.csv')
+# Load the test dataset
+test_data = pd.read_csv('db/Kc1.csv')
+
+# Preprocess the test dataset
+X_test, y_test = preprocess_data(test_data, train=True)  # Ensure 'label' is returned
 
 # Load the scaler and model
-scaler = load('models/scaler.joblib')
-svm_model = load('models/svm_model.joblib')
+model_name = input("Enter the model to test (e.g., RF, SVM, GB, Stacking): ").strip()
+model = load(f'models/{model_name}_model.joblib')
+scaler = load(f'models/{model_name}_scaler.joblib')
 
-# Standardize the new dataset
-X_new = scaler.transform(X_new)
+# Scale features
+X_test = scaler.transform(X_test)
 
-# Predict with the SVM model
-y_new_pred = svm_model.predict(X_new)
-
-# Evaluate the model
-evaluate_model(y_new, y_new_pred, model=svm_model, X_test=X_new, title="Confusion Matrix for SVM (Testing)")
+# Predict and evaluate
+evaluate_model(model, X_test, y_test)

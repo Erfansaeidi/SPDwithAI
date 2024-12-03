@@ -91,11 +91,6 @@ print("F1 Score:", f1_score(y_test, y_pred))
 print("ROC-AUC Score:", roc_auc_score(y_test, svm_model.predict_proba(X_test)[:, 1]))
 
 
-# Save the scaler after fitting it during training
-dump(scaler, 'scaler.joblib')
-
-
-
 #test dataset
 # Load the new dataset
 new_data = pd.read_csv('db/cm1.csv')
